@@ -12,7 +12,7 @@ def connection():
     #     settings.mysql_passwd, 
     #     settings.mysql_schema)
 
-    con = pymysql.connect(host='localhost', user='root', password='uBuntu@20.', db = 'sys') 
+    con = pymysql.connect(host='localhost', user='root', password='', db = 'sys') 
     return con
 
 def mostcommonsymptoms(vax_name):
