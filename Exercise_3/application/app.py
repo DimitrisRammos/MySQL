@@ -152,6 +152,10 @@ def patientreport(patientName):
     print([("Patient","Physician", "Nurse", "Date of release", "Treatement going on", "Cost", "Room", "Floor", "Block"),] + list(table))
     return [("Patient","Physician", "Nurse", "Date of release", "Treatement going on", "Cost", "Room", "Floor", "Block"),]
 
+<<<<<<< HEAD
 # findnurse(1,2)
 # patientreport("Nicolas Craig")
 mostcommonsymptoms('PFIZER')
+=======
+findnurse(1,2)
+>>>>>>> 1789c8afdbf0d550a2837259773c288f2fa697d5
