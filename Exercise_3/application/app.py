@@ -25,7 +25,27 @@ def connection():
 def convertTuple(tup):
     str =  ''.join(tup)
     return str
-  
+
+def delete_stopwords( text):
+    #stopwords
+    all_stopwords = gensim.parsing.preprocessing.STOPWORDS
+    all_stopwords = list( all_stopwords)
+    result = create_ngrams( text, 1)
+    j = 0
+    while  j < len( result):
+        find = False
+        for i in range( len( all_stopwords)):
+            
+            if result[j] == all_stopwords[i]:
+                result.pop(j)
+                find = True
+                break
+        
+        if find == False:
+            j = j + 1
+
+    new_text = " ".join(result)                     
+    return new_text
 
 def create_ngrams( text, num):
     res = text.split()
@@ -80,7 +100,7 @@ def mostcommonsymptoms(vax_name):
         text = convertTuple(row)
         new_text = text.lower()
         new_text = strip_punctuation(new_text)
-        new_text = remove_stopwords(new_text)
+        new_text = delete_stopwords(new_text)
         res = create_ngrams( new_text, num_ngrams)
         
         #forloop for list res where return the function create_ngrams
@@ -152,10 +172,7 @@ def patientreport(patientName):
     print([("Patient","Physician", "Nurse", "Date of release", "Treatement going on", "Cost", "Room", "Floor", "Block"),] + list(table))
     return [("Patient","Physician", "Nurse", "Date of release", "Treatement going on", "Cost", "Room", "Floor", "Block"),]
 
-<<<<<<< HEAD
 # findnurse(1,2)
 # patientreport("Nicolas Craig")
 mostcommonsymptoms('PFIZER')
-=======
-findnurse(1,2)
->>>>>>> 1789c8afdbf0d550a2837259773c288f2fa697d5
+# findnurse(1,2)
