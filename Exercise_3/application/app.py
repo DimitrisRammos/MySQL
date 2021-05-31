@@ -1,13 +1,15 @@
 # ----- CONFIGURE YOUR EDITOR TO USE 4 SPACES PER TAB ----- #
+
 import settings
 import sys,os
 sys.path.append(os.path.join(os.path.split(os.path.abspath(__file__))[0], 'lib'))
-import pymysql #as db
-
+import pymysql as db
+NoneType = type(None)
 import gensim
 from gensim.parsing.preprocessing import remove_stopwords, STOPWORDS
 from gensim.parsing.preprocessing import strip_punctuation
 
+import random
 
 def connection():
     ''' User this function to create your connections '''
@@ -17,10 +19,10 @@ def connection():
     #     settings.mysql_passwd, 
     #     settings.mysql_schema)
 
-    con = pymysql.connect(host='localhost', user='root', password='', db = 'sys') 
+    con = db.connect(host='localhost', user='root', password='uBuntu@20.', db = 'sys') 
     return con
 
-# Python3 code to convert tuple 
+# Python3 code to convertcur.execute( tuple 
 # into string
 def convertTuple(tup):
     str =  ''.join(tup)
@@ -139,8 +141,70 @@ def buildnewblock(blockfloor):
     # Create a cursor on the connection
     cur=con.cursor()
     
- 
-    return [("result",),]
+    cur.execute(f"SELECT count(*) FROM block bl WHERE bl.BlockFloor = {blockfloor}")
+    x = cur.fetchone()
+    count = int(x[0])
+    if count == 9:
+        print("error")
+        return "error"
+    
+    cur = con.cursor()
+    cur.execute(f"SELECT bl.BlockCode FROM block bl WHERE bl.BlockFloor = {blockfloor}")
+
+    c = cur.fetchone()
+    new_code = 1
+
+    while new_code < 10:
+        
+        try:
+            count_ = int(c[0])
+
+            if count_ == new_code:
+                new_code += 1
+            else:
+                break
+        
+            c = cur.fetchone()
+        except TypeError:
+            break
+
+    
+    cur = con.cursor()
+    sql = f"""INSERT INTO block VALUES ({blockfloor},{new_code})"""
+    try:
+        # Execute the SQL command
+        cur.execute(sql)
+        # Commit your changes in the database
+        con.commit()
+    except:
+        # Rollback in case there is any error
+        con.rollback()
+    try:
+        con.commit()
+    except:
+        con.rollback()
+
+    #room count
+    room_num = random.randint(1,5)
+    for i in range(1,room_num + 1):
+        code_room = blockfloor*1000 + new_code*100 + room_num
+        sql = f"""INSERT INTO room VALUES ({code_room},'NON-TYPE', {blockfloor}, {new_code} ,0)"""
+
+        try:
+            # Execute the SQL command
+            cur.execute(sql)
+            # Commit your changes in the database
+            con.commit()
+        except: 
+            # Rollback in case there is any error
+            con.rollback()
+        try:
+            con.commit()
+        except:
+            con.rollback() 
+
+    print("ok")
+    return [("result",),("ok",)] 
 
 def findnurse(x,y):
 
@@ -174,5 +238,6 @@ def patientreport(patientName):
 
 # findnurse(1,2)
 # patientreport("Nicolas Craig")
-mostcommonsymptoms('PFIZER')
+# mostcommonsymptoms('PFIZER')
 # findnurse(1,2)
+buildnewblock(5)
