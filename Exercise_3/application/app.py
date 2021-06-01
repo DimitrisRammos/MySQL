@@ -242,7 +242,7 @@ def patientreport(patientName):
 
     # Create a cursor on the connection
     cur=con.cursor()
-    cur.execute(f"SELECT s.StayEnd, t.Name, t.Cost, ph.Name, n.Name, r.BlockFloor, r.BlockCode FROM patient p,room r,stay s,undergoes u ,treatment t ,physician ph , nurse n WHERE (u.Physician = ph.EmployeeID AND u.AssistingNurse = n.EmployeeID AND u.stay = s.StayID AND u.Treatment = t.Code AND s.Room = r.RoomNumber AND s.Patient = p.SSN AND p.Name = '{patientName}')")
+    cur.execute(f"SELECT s.StayEnd, t.Name, t.Cost, ph.Name, n.Name, r.BlockFloor, r.BlockCode, r.RoomNumber FROM patient p,room r,stay s,undergoes u ,treatment t ,physician ph , nurse n WHERE (u.Physician = ph.EmployeeID AND u.AssistingNurse = n.EmployeeID AND u.stay = s.StayID AND u.Treatment = t.Code AND s.Room = r.RoomNumber AND s.Patient = p.SSN AND p.Name = '{patientName}')")
     
     table = cur.fetchall()
     
