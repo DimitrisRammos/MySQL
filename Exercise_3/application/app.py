@@ -256,4 +256,8 @@ def patientreport(patientName):
 # patientreport("Nicolas Craig")
 # mostcommonsymptoms('PFIZER')
 # findnurse(1,2)
+<<<<<<< HEAD
 # buildnewblock(5)
+=======
+buildnewblock(5)
+>>>>>>> 00d5ea57f6a29e26878c08e4f6233aa4da23c539
