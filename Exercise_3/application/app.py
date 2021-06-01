@@ -5,6 +5,7 @@ import sys,os
 sys.path.append(os.path.join(os.path.split(os.path.abspath(__file__))[0], 'lib'))
 import pymysql as db
 NoneType = type(None)
+
 import gensim
 from gensim.parsing.preprocessing import remove_stopwords, STOPWORDS
 from gensim.parsing.preprocessing import strip_punctuation
@@ -19,7 +20,7 @@ def connection():
     #     settings.mysql_passwd, 
     #     settings.mysql_schema)
 
-    con = db.connect(host='localhost', user='root', password='uBuntu@20.', db = 'sys') 
+    con = db.connect(host='localhost', user='root', password='', db = 'sys') 
     return con
 
 # Python3 code to convertcur.execute( tuple 
@@ -28,8 +29,9 @@ def convertTuple(tup):
     str =  ''.join(tup)
     return str
 
+#delete stopwords
 def delete_stopwords( text):
-    #stopwords
+    # take stopwords
     all_stopwords = gensim.parsing.preprocessing.STOPWORDS
     all_stopwords = list( all_stopwords)
     result = create_ngrams( text, 1)
@@ -46,9 +48,11 @@ def delete_stopwords( text):
         if find == False:
             j = j + 1
 
+    #create string again
     new_text = " ".join(result)                     
     return new_text
 
+#create ngrams
 def create_ngrams( text, num):
     res = text.split()
     if num == 1:
@@ -67,7 +71,8 @@ def create_ngrams( text, num):
             result.append(res[r] + " " + res[r+1] + " " + res[r+2])
 
         return result
-    
+
+#class Word for list with words
 class Word:
     
     def __init__(self, str, num):
@@ -119,7 +124,8 @@ def mostcommonsymptoms(vax_name):
             else:
                 w = result[i]
                 w.num +=1
-        
+
+    #sort the table    
     result = sorted( result, key = get)
     result_finally = []
     for i in range(len(result)):
@@ -128,8 +134,10 @@ def mostcommonsymptoms(vax_name):
         word = result[i]
         result_finally.append(word.str)
     
+    #print results
     print([vax_name] + result_finally)
-
+    
+    #return results
     return [vax_name] + result_finally
 
 
@@ -141,6 +149,7 @@ def buildnewblock(blockfloor):
     # Create a cursor on the connection
     cur=con.cursor()
     
+    #if the blockfloor have free ward
     cur.execute(f"SELECT count(*) FROM block bl WHERE bl.BlockFloor = {blockfloor}")
     x = cur.fetchone()
     count = int(x[0])
@@ -154,6 +163,7 @@ def buildnewblock(blockfloor):
     c = cur.fetchone()
     new_code = 1
 
+    #i find this ward and i crete this ward in blockfloor from input
     while new_code < 10:
         
         try:
@@ -168,7 +178,7 @@ def buildnewblock(blockfloor):
         except TypeError:
             break
 
-    
+    #i add this new_code in table block
     cur = con.cursor()
     sql = f"""INSERT INTO block VALUES ({blockfloor},{new_code})"""
     try:
@@ -188,6 +198,7 @@ def buildnewblock(blockfloor):
     room_num = random.randint(1,5)
     for i in range(1,room_num + 1):
         code_room = blockfloor*1000 + new_code*100 + room_num
+        #i create room and i add in table room
         sql = f"""INSERT INTO room VALUES ({code_room},'NON-TYPE', {blockfloor}, {new_code} ,0)"""
 
         try:
@@ -202,7 +213,8 @@ def buildnewblock(blockfloor):
             con.commit()
         except:
             con.rollback() 
-
+    
+    #results
     print("ok")
     return [("result",),("ok",)] 
 
@@ -218,8 +230,8 @@ def findnurse(x,y):
 
     
     table = cur.fetchall()
-    #print because with have ERROR 500
 
+    #print because with have ERROR 500
     print([("Nurse", "ID", "Number of patients"),] + list(table) )
     #return
     return [("Nurse", "ID", "Number of patients"),] + list(table)
@@ -233,11 +245,15 @@ def patientreport(patientName):
     cur.execute(f"SELECT s.StayEnd, t.Name, t.Cost, ph.Name, n.Name, r.BlockFloor, r.BlockCode FROM patient p,room r,stay s,undergoes u ,treatment t ,physician ph , nurse n WHERE (u.Physician = ph.EmployeeID AND u.AssistingNurse = n.EmployeeID AND u.stay = s.StayID AND u.Treatment = t.Code AND s.Room = r.RoomNumber AND s.Patient = p.SSN AND p.Name = '{patientName}')")
     
     table = cur.fetchall()
+    
+    #results
     print([("Patient","Physician", "Nurse", "Date of release", "Treatement going on", "Cost", "Room", "Floor", "Block"),] + list(table))
     return [("Patient","Physician", "Nurse", "Date of release", "Treatement going on", "Cost", "Room", "Floor", "Block"),]
 
-# findnurse(1,2)
+# for test
+
+
 # patientreport("Nicolas Craig")
 # mostcommonsymptoms('PFIZER')
 # findnurse(1,2)
-buildnewblock(5)
+# buildnewblock(5)
