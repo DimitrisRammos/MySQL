@@ -5,7 +5,7 @@ This project is work from our quarter half year in https://www.di.uoa.gr/.
 
 [Dimitris Rammos](https://github.com/DimitrisRammos)
 
-[Antonis Vidalis}(https://github.com/sdi1900024)
+[Antonis Vidalis](https://github.com/sdi1900024)
 
 [Thodoris Minaidis](https://github.com/tminaidis9)
 
