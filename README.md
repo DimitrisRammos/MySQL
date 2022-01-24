@@ -13,10 +13,6 @@ This project is work from our quarter half year in https://www.di.uoa.gr/.
 
 git clone https://github.com/DimitrisRammos/MySQL
 
-## Code
-
-## Vocalization Project
-
 ## Compilation
 
 Start, change exercise(i) and run:
